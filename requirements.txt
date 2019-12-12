@@ -1,3 +1,2 @@
-Djangodjango-rest-framework
 Django
 django-rest-framework
