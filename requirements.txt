@@ -1,2 +1,5 @@
+djangorestframework
 Django
-django-rest-framework
+djangorestframework-jsonapi
+djangorestframework-jwt
+djangorestframework-simplejwt
