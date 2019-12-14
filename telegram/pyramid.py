@@ -1,40 +1,36 @@
 import telebot
 import requests
 import json
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+
 TOKEN = '1024735974:AAFZZoTuOHDYEnOw6TCt-J-CKR9QAIDxaCQ'
 bot = telebot.TeleBot(TOKEN)
 
 
-# getMe
-user = bot.get_me()
+def button():
+    r = requests.get('http://127.0.0.1:8000/api/button')
+    data = json.loads(r.text)
+    key = ReplyKeyboardMarkup(True, False)
+    print(data)
+
+
 @bot.message_handler(commands=['start'])
 def start(message):
-    text = 'Привет, {}'.format(message.from_user.first_name) + ' это бот'
+    text = 'Привет, {}'.format(
+        message.from_user.first_name) + ' это бот, к которому Абдумалик должен придумать приветствие и описание'
     bot.send_message(message.from_user.id, text)
+    button()
 
 
-@bot.message_handler(commands=['start', 'help'])
+@bot.message_handler(commands=['help'])
 def send_welcome(message):
-    bot.reply_to(message, "Howdy, how are you doing?")
-
-
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, message.text)
-
-
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, "Howdy, how are you doing?")
+    bot.reply_to(message, "Help text. Как работает бот")
 
 
 @bot.message_handler(content_types='text')
 def Send_Message(message):
     pass
 
-bot.polling(none_stop=False, interval=0, timeout=20)
 
-file_info = bot.get_file(file_id)
-file = requests.get('https://api.telegram.org/file/bot{0}/{1}'.format(API_TOKEN, file_info.file_path))
-
-
+if __name__ == '__main__':
+    bot.polling(none_stop=True)

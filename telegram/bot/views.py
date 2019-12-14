@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 
 class GetList(APIView):
-    def get(self,request):
+    def get(self, request):
         pass
 
     def post(self, request):
