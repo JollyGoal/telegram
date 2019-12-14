@@ -3,3 +3,4 @@ Django
 djangorestframework-jsonapi
 djangorestframework-jwt
 djangorestframework-simplejwt
+pyTelegramBotAPI
