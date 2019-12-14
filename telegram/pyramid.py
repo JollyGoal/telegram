@@ -7,19 +7,24 @@ TOKEN = '1024735974:AAFZZoTuOHDYEnOw6TCt-J-CKR9QAIDxaCQ'
 bot = telebot.TeleBot(TOKEN)
 
 
-def button():
+def button(message):
     r = requests.get('http://127.0.0.1:8000/api/button')
     data = json.loads(r.text)
     key = ReplyKeyboardMarkup(True, False)
     print(data)
+    for i in range(len(data['data'])):
+        buttons = KeyboardButton(data['data'][i]['name'])
+        key.add(buttons)
+    text = 'Выберите опцию:'
+    bot.send_message(message.from_user.id, text, reply_markup=key)
 
 
 @bot.message_handler(commands=['start'])
 def start(message):
     text = 'Привет, {}'.format(
-        message.from_user.first_name) + ' это бот, к которому Абдумалик должен придумать приветствие и описание'
+        message.from_user.first_name) + ' !Это бот, к которому Абдумалик должен придумать приветствие и описание'
     bot.send_message(message.from_user.id, text)
-    button()
+    button(message)
 
 
 @bot.message_handler(commands=['help'])
