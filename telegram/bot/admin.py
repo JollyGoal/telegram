@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .models import Button, Text
+from .models import Profiles
 
 
-admin.site.register(Button)
-admin.site.register(Text)
+admin.site.register(Profiles)

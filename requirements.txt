@@ -4,3 +4,4 @@ djangorestframework-jsonapi
 djangorestframework-jwt
 djangorestframework-simplejwt
 pyTelegramBotAPI
+python-telegram-bot==12.2.0
