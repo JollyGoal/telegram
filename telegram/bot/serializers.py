@@ -10,6 +10,20 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('invited_by', 'user_id', 'first_name', 'last_name', 'username', 'balance')
 
 
+class UpdateProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('invited_by', 'first_name', 'last_name', 'username')
+
+
+class InvitedBySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'username')
+
+
 class TransactionSerializer(serializers.ModelSerializer):
     broker = ProfileSerializer()
 

@@ -95,9 +95,9 @@ class ProfilesView(APIView):
     Creator class
     ###Fileds should be sent:
         {
-            'user_id': 123,     #Foreign Key to user_id
+            'user_id': 123,
         }
-    + invited_by - ***Optional***
+    + invited_by - ***Optional, ForeignKey to user_id***
     + first_name - ***Optional***
     + last_name - ***Optional***
     + username - ***Optional***
@@ -110,3 +110,59 @@ class ProfilesView(APIView):
             return Response({'status': 'Added'})
         else:
             return Response({'status': 'Error'})
+
+    """
+    PUT:
+    Editor class
+    ###Fileds should be sent:
+        {
+            'first_name': 'Name',
+            'last_name': 'Surname',
+            'username': 'Username',
+        }
+    """
+    def put(self, request):
+        user_id = request.GET.get('user_id')
+        profile = Profile.objects.filter(user_id=user_id).first()
+        serializer = UpdateProfileSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'status': 'Edited'})
+        else:
+            return Response({'status': 'Error'})
+
+
+class SingleProfileView(APIView):
+
+    """
+    GET:
+    Get Profile by user_id
+    ###Params should be sent:
+        {
+            'user_id': 3,  #ForeignKey to Profiles.user_id
+        }
+    """
+
+    def get(self, request):
+        user_id = request.GET.get('user_id')
+        t = Profile.objects.filter(user_id=user_id)
+        serializer = ProfileSerializer(t, many=True)
+        return Response({'data': serializer.data})
+
+
+class InvitedBy(APIView):
+
+    """
+    GET:
+    Get Profile by user_id
+    ###Params should be sent:
+        {
+            'user_id': 3,  #ForeignKey to Profiles.user_id
+        }
+    """
+
+    def get(self, request):
+        user_id = request.GET.get('user_id')
+        t = Profile.objects.filter(invited_by=user_id)
+        serializer = InvitedBySerializer(t, many=True)
+        return Response({'data': serializer.data})

@@ -14,7 +14,7 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=450, null=True, blank=True)
     last_name = models.CharField(max_length=450, null=True, blank=True)
     username = models.CharField(max_length=450, null=True, blank=True)
-    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    balance = models.DecimalField(max_digits=16, decimal_places=2, default=0)
     created_on = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
@@ -34,7 +34,7 @@ class Transaction(models.Model):
     ]
     type = models.CharField(max_length=1, choices=TRANSACTION_TYPE)
     verified = models.BooleanField(default=False)
-    sum = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    sum = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
     image = models.ImageField(upload_to=image_folder, blank=True)
     pub_date = models.DateTimeField(auto_now_add=True)
 

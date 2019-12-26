@@ -4,7 +4,7 @@ from .models import Profile, Transaction, VerifiedTransaction
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('invited_by', 'username', 'balance', 'user_id', 'first_name')
+    list_display = ('user_id', 'username', 'balance', 'invited_by', 'first_name', 'last_name')
 
 
 class TransactionAdmin(admin.ModelAdmin):
