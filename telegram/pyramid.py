@@ -11,6 +11,7 @@ bot = telebot.TeleBot(TOKEN)
 withdraw_status = False
 replenishment_status = False
 input_card = False
+input_card_replenishment = False
 som = 0
 
 
@@ -117,10 +118,12 @@ def send_oplatit(message):
     global withdraw_status
     global replenishment_status
     global input_card
+    global input_card_replenishment
     global som
     replenishment_status = False
     withdraw_status = False
     input_card = False
+    input_card_replenishment = False
     som = 0
     return bot.send_message(message.from_user.id, "Главное меню", reply_markup=main_btns(message))
 
@@ -130,6 +133,7 @@ def send_any_text(message):
     global withdraw_status
     global replenishment_status
     global input_card
+    global input_card_replenishment
     global som
     if not message.from_user.is_bot:
         chat_id = message.chat.id
@@ -153,11 +157,12 @@ def send_any_text(message):
         if message.text == '💴 Пополнить баланс':
             bot.reply_to(message,
                          'Чтобы пополнить свой баланс вам необходимо перечислить средства на счёт: <b>"0000 0000 0000"</b> \n'
-                         'Если вы уже перечислили деньги, то просто отправьте мне фото трансакции, или номер карты с суммой перевода одним сообщением, \n'
+                         'Минимальная сумма начисления 30 000 сум. \n'
+                         'Если вы уже перечислили деньги, то просто отправьте сумму начисления,\n'
                          'Например: ', parse_mode='HTML')
             replenishment_key = ReplyKeyboardMarkup(True, False)
             replenishment_key.add('Назад')
-            bot.send_message(message.from_user.id, "Номер карты: 8600 1111 2222 3333." + " Сумма: 2311212", reply_markup=replenishment_key)
+            bot.send_message(message.from_user.id, "30000", reply_markup=replenishment_key)
             replenishment_status = True
             # bot.forward_message(to_chat_id, from_chat_id, message_id)  TODO
         elif message.text == '🔗 Реферальная ссылка':
@@ -218,7 +223,40 @@ def send_any_text(message):
                 response = requests.post('http://127.0.0.1:8000/api/transactions_not_verified/', data=withdraw_data)
                 print(response.status_code, response.reason)
                 withdraw_status = False
+                replenishment_status = False
                 input_card = False
+                som = 0
+
+            elif replenishment_status:
+                replenishment_key = ReplyKeyboardMarkup(True, False)
+                replenishment_key.add('Назад')
+                try:
+                    som = decimal.Decimal(message.text)
+                    bot.send_message(message.from_user.id, "Введите номер карты, с которой были начислены средства."
+                                                           "\nНапример: <b>8600 1111 2222 3333</b>", parse_mode="HTML")
+                    input_card_replenishment = True
+                    replenishment_status = False
+                except:
+                    bot.send_message(message.from_user.id, 'Пожалуйста, введите сумму начисления, например: <b>300000</>', reply_markup=replenishment_key, parse_mode="HTML")
+                    pass
+
+            elif input_card_replenishment:
+
+                text = "Ваш запрос обрабатывается! Данные о вашем балансе будут обновлены в течение 2-х суток." + "\n" + "Детали:" + "\nСумма: " + str(som) + "\nНомер карты: " + message.text
+                bot.send_message(message.from_user.id, text)
+                replenishment_data = {
+                    'broker': message.from_user.id,
+                    'type': "P",
+                    'sum': som,
+                    'card': message.text,
+                }
+                response = requests.post('http://127.0.0.1:8000/api/transactions_not_verified/', data=replenishment_data)
+                print(response.status_code, response.reason)
+                withdraw_status = False
+                replenishment_status = False
+                input_card = False
+                input_card_replenishment = False
+                som = 0
 
             else:
                 bot.reply_to(message, 'Я не понимаю, чего вы от меня хотите 😔', reply_markup=main_btns(message))
