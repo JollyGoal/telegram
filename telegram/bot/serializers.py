@@ -36,7 +36,7 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('broker', 'card', 'type', 'sum', 'image', 'details', 'pub_date')
+        fields = ('broker', 'card', 'type', 'sum', 'image', 'pub_date')
 
 
 class VerifiedTransactionSerializer(serializers.ModelSerializer):

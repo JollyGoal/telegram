@@ -9,7 +9,7 @@ def image_folder(instance, filename):
 
 
 class Profile(models.Model):
-    invited_by = models.ForeignKey('Profile', to_field='user_id', on_delete=models.PROTECT, blank=True, null=True)
+    invited_by = models.ForeignKey('Profile', to_field='user_id', on_delete=models.SET_NULL, blank=True, null=True)
     user_id = models.PositiveIntegerField(unique=True)
     first_name = models.CharField(max_length=450, null=True, blank=True)
     last_name = models.CharField(max_length=450, null=True, blank=True)
@@ -36,7 +36,6 @@ class Transaction(models.Model):
     verified = models.BooleanField(default=False)
     sum = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
     image = models.ImageField(upload_to=image_folder, blank=True)
-    details = models.TextField(blank=True, null=True)
     pub_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

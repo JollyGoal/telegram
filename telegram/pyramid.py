@@ -108,9 +108,8 @@ def start(message):
 
 @bot.message_handler(commands=['help'])
 def send_welcome(message):
-    bot.reply_to(message, "Help text. Как работает бот")  # TODO
     text = "Как работает бот?"
-    bot.send_message(message.from_user.id, text, reply_markup=main_btns(message))
+    bot.reply_to(message, text, reply_markup=main_btns(message))  # TODO
 
 
 @bot.message_handler(func=lambda message: 'Назад' == message.text, content_types=['text'])
@@ -164,7 +163,6 @@ def send_any_text(message):
             replenishment_key.add('Назад')
             bot.send_message(message.from_user.id, "30000", reply_markup=replenishment_key)
             replenishment_status = True
-            # bot.forward_message(to_chat_id, from_chat_id, message_id)  TODO
         elif message.text == '🔗 Реферальная ссылка':
             bot.reply_to(message, 'Ваша реферальная ссылка:')
             bot.send_message(message.from_user.id, '<b>http://t.me/GeniusPlaza_bot/?start=</b>{}'.format(message.from_user.id), parse_mode='HTML', reply_markup=key)
@@ -252,6 +250,7 @@ def send_any_text(message):
                 }
                 response = requests.post('http://127.0.0.1:8000/api/transactions_not_verified/', data=replenishment_data)
                 print(response.status_code, response.reason)
+                print(som)
                 withdraw_status = False
                 replenishment_status = False
                 input_card = False
