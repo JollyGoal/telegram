@@ -5,3 +5,6 @@ djangorestframework-jwt
 djangorestframework-simplejwt
 pyTelegramBotAPI
 python-telegram-bot==12.2.0
+gunicorn
+django-heroku
+psycopg2-binary
